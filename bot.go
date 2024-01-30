@@ -6,6 +6,7 @@ import (
 	"regexp"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	"github.com/your-username/your-project/config" // Import the config package
 )
 
 func main() {
@@ -59,7 +60,7 @@ func main() {
 
 func getUserBio(bot *tgbotapi.BotAPI, user *tgbotapi.User) (string, error) {
 	// Get the user's profile photos
-	photos, err := bot.GetUserProfilePhotos(tgbotapi.NewUserProfilePhotos(user.ID, 0, 1))
+	photos, err := bot.GetUserProfilePhotos(tgbotapi.NewUserProfilePhotos(user.ID, 0))
 	if err != nil {
 		return "", err
 	}
@@ -68,7 +69,7 @@ func getUserBio(bot *tgbotapi.BotAPI, user *tgbotapi.User) (string, error) {
 	if len(photos.Photos) > 0 {
 		// Extract bio information from the caption of the latest photo
 		latestPhoto := photos.Photos[0][0]
-		bio := latestPhoto.Caption
+		bio := latestPhoto.FileID // Use FileID or any other relevant field
 
 		// You may need to further process 'bio' based on your specific use case
 
