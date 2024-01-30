@@ -6,11 +6,11 @@ import (
 	"regexp"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
-	"github.com/your-username/your-project/config" // Import the config package
+	"github.com/aswinxd/golang/config" // Import the config package
 )
 
 func main() {
-	bot, err := tgbotapi.NewBotAPI("6350652136:AAFriDrVaXsIEchvLTj8BY3JEvvCGyVjTHI")
+	bot, err := tgbotapi.NewBotAPI(config.BotToken)
 	if err != nil {
 		log.Fatal(err)
 	}
