@@ -6,11 +6,12 @@ import (
 	"regexp"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
-	"github.com/aswinxd/golang/config.go" // Import the config package
 )
 
+const BotToken = "6350652136:AAFriDrVaXsIEchvLTj8BY3JEvvCGyVjTHI"
+
 func main() {
-	bot, err := tgbotapi.NewBotAPI(config.BotToken)
+	bot, err := tgbotapi.NewBotAPI(BotToken)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -29,7 +30,7 @@ func main() {
 
 		user := update.Message.From
 		chatID := update.Message.Chat.ID
-		bio, err := getUserBio(bot, user)
+		bio, err := getUserBio(update.Message)
 		if err != nil {
 			log.Println("Error retrieving user bio:", err)
 			continue
@@ -58,11 +59,11 @@ func main() {
 	}
 }
 
-func getUserBio(bot *tgbotapi.BotAPI, user *tgbotapi.User) (string, error) {
-	// Check if the latest message is present
-	if update.Message.Text != "" {
-		// Extract bio information from the latest message text
-		return update.Message.Text, nil
+func getUserBio(message *tgbotapi.Message) (string, error) {
+	// Check if the message text is present
+	if message.Text != "" {
+		// Extract bio information from the message text
+		return message.Text, nil
 	}
 
 	// Return an empty string if no bio is available
