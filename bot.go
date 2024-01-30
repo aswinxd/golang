@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	bot, err := tgbotapi.NewBotAPI("1711796263:AAGwSl_kQXts-Q4Q_5NjuWcgUcncinO8M7M")
+	bot, err := tgbotapi.NewBotAPI("YOUR_BOT_TOKEN")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -27,7 +27,7 @@ func main() {
 
 		user := update.Message.From
 		chatID := update.Message.Chat.ID
-		bio := user.Bio
+		bio := getUserBio(user)
 
 		if bio != "" && hasLink(bio) {
 			kickConfig := tgbotapi.KickChatMemberConfig{
@@ -44,6 +44,13 @@ func main() {
 			}
 		}
 	}
+}
+
+func getUserBio(user *tgbotapi.User) string {
+	// Implement a function to get user bio information
+	// based on available fields or methods in the tgbotapi.User type.
+	// Return an empty string if bio information is not available.
+	return ""
 }
 
 func hasLink(text string) bool {
