@@ -1,3 +1,4 @@
+// main.go
 package main
 
 import (
@@ -8,7 +9,7 @@ import (
 )
 
 func main() {
-	bot, err := tgbotapi.NewBotAPI("6350652136:AAFriDrVaXsIEchvLTj8BY3JEvvCGyVjTHI")
+	bot, err := tgbotapi.NewBotAPI(config.BotToken)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -27,7 +28,13 @@ func main() {
 
 		user := update.Message.From
 		chatID := update.Message.Chat.ID
-		bio := getUserBio(user)
+		bio, err := getUserBio(bot, user)
+		if err != nil {
+			log.Println("Error retrieving user bio:", err)
+			continue
+		}
+
+		log.Printf("User %s bio: %s", user.UserName, bio)
 
 		if bio != "" && hasLink(bio) {
 			log.Printf("Banning user %s with link in bio", user.UserName)
@@ -50,12 +57,26 @@ func main() {
 	}
 }
 
-func getUserBio(user *tgbotapi.User) string {
-	// Implement a function to get user bio information
-	// based on available fields or methods in the tgbotapi.User type.
-	// Return an empty string if bio information is not available.
-	// Example: return user.Bio
-	return ""
+func getUserBio(bot *tgbotapi.BotAPI, user *tgbotapi.User) (string, error) {
+	// Get the user's profile photos
+	photos, err := bot.GetUserProfilePhotos(tgbotapi.NewUserProfilePhotos(user.ID, 0, 1))
+	if err != nil {
+		return "", err
+	}
+
+	// Check if there is at least one photo
+	if len(photos.Photos) > 0 {
+		// Extract bio information from the caption of the latest photo
+		latestPhoto := photos.Photos[0][0]
+		bio := latestPhoto.Caption
+
+		// You may need to further process 'bio' based on your specific use case
+
+		return bio, nil
+	}
+
+	// Return an empty string if no photo or bio is available
+	return "", nil
 }
 
 func hasLink(text string) bool {
