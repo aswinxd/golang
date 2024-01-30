@@ -1,3 +1,4 @@
+// main.go
 package main
 
 import (
@@ -5,10 +6,11 @@ import (
 	"regexp"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	"github.com/your-username/your-project/config" // Import the config package
 )
 
 func main() {
-	bot, err := tgbotapi.NewBotAPI("6350652136:AAFriDrVaXsIEchvLTj8BY3JEvvCGyVjTHI")
+	bot, err := tgbotapi.NewBotAPI(config.BotToken)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -57,24 +59,13 @@ func main() {
 }
 
 func getUserBio(bot *tgbotapi.BotAPI, user *tgbotapi.User) (string, error) {
-	// Get the user's profile photos
-	photos, err := bot.GetUserProfilePhotos(tgbotapi.NewUserProfilePhotos(user.ID, 0, 1))
-	if err != nil {
-		return "", err
+	// Check if the latest message is present
+	if update.Message.Text != "" {
+		// Extract bio information from the latest message text
+		return update.Message.Text, nil
 	}
 
-	// Check if there is at least one photo
-	if len(photos.Photos) > 0 {
-		// Extract bio information from the caption of the latest photo
-		latestPhoto := photos.Photos[0][0]
-		bio := latestPhoto.Caption
-
-		// You may need to further process 'bio' based on your specific use case
-
-		return bio, nil
-	}
-
-	// Return an empty string if no photo or bio is available
+	// Return an empty string if no bio is available
 	return "", nil
 }
 
