@@ -6,7 +6,7 @@ import (
 	"regexp"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
-	"github.com/aswinxd/golang/config" // Import the config package
+	"github.com/aswinxd/golang/config.go" // Import the config package
 )
 
 func main() {
